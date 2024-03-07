@@ -8,7 +8,9 @@ pipeline {
 		PROJECT_ID = 'vertical-gift-415015'
                 CLUSTER_NAME = 'cluster-1'
                 LOCATION = 'asia-southeast1-a'
-                CREDENTIALS_ID = 'kubernetes'		
+                CREDENTIALS_ID = 'kubernetes'	
+		DOCKER_HUB_USER = 'sourabhashettypapt666'
+		DOCKER_HUB_REGISTRY = 'devproject-k8'
 	}
 	
     stages {
@@ -35,8 +37,18 @@ pipeline {
 		    steps {
 			    sh 'whoami'
 			    script {
-				    myimage = docker.build("sourabhashettypapt666/devops:${env.BUILD_ID}")
-			    }
+	            // Make sure Docker is installed on the Jenkins agent
+	
+	            // Check if there are running containers before attempting to stop them
+	            def runningContainers = sh(script: 'docker ps -q', returnStdout: true).trim()
+	            
+	            if (runningContainers) {
+	                sh "docker stop \$(docker ps -a -q) && docker container prune -f"
+	            }
+	
+	            sh "docker image prune -f"
+	            sh "docker build -t ${DOCKER_HUB_USER}/${DOCKER_HUB_REGISTRY}:${BUILD_NUMBER} ."
+	        }
 		    }
 	    }
 	    
@@ -47,7 +59,7 @@ pipeline {
 				    withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
             				sh "docker login -u sourabhashettypapt666 -p ${dockerhub}"
 				    }
-				        myimage.push("${env.BUILD_ID}")
+				      sh "docker push ${DOCKER_HUB_USER}/${DOCKER_HUB_REGISTRY}:${BUILD_NUMBER}"
 				    
 			    }
 		    }
