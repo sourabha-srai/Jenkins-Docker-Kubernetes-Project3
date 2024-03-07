@@ -23,8 +23,7 @@ pipeline {
 	    stage('Build') {
 		    steps {
 			    sh 'mvn clean package'
-			    sh 'pwd'
-			    sh 'hostname'
+			    sh 'mv /var/lib/jenkins/workspace/docker-k8-project/kubernetes/target/kubernetes-1.0-AMIT.war /var/lib/jenkins/workspace/docker-k8-project/kubernetes/target/ss.war'
 		    }
 	    }
 	    
