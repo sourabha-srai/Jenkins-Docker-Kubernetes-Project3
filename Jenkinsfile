@@ -23,6 +23,8 @@ pipeline {
 	    stage('Build') {
 		    steps {
 			    sh 'mvn clean package'
+			    sh 'pwd'
+			    sh 'hostname'
 		    }
 	    }
 	    
