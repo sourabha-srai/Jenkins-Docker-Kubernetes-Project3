@@ -58,9 +58,8 @@ pipeline {
 				    echo "Push Docker Image"
 				    withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
             				sh "docker login -u sourabhashettypapt666 -p ${dockerhub}"
-				    }
-				      sh "docker push ${DOCKER_HUB_USER}/${DOCKER_HUB_REGISTRY}:${BUILD_NUMBER}"
-				    
+					sh "docker push ${DOCKER_HUB_USER}/${DOCKER_HUB_REGISTRY}:${BUILD_NUMBER}"
+				    }  
 			    }
 		    }
 	    }
